@@ -354,7 +354,7 @@ function InitRightBottomView ([System.Windows.Forms.TableLayoutPanel]$rightLayou
     $layout.Dock = 'Fill'
     $layout.CellBorderStyle = 'None'
     $layout.RowCount = 1
-    $layout.ColumnCount = 3
+    $layout.ColumnCount = 4
     $layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 25)))
     $layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 25)))
     $layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 25)))
