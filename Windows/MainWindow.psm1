@@ -1,4 +1,6 @@
-﻿[System.Windows.Forms.Form]$script:window = $null
+﻿Import-Module '.\Utils\Requester.psm1'
+
+[System.Windows.Forms.Form]$script:window = $null
 
 [System.Windows.Forms.Button]$script:importButton = $null
 [System.Windows.Forms.Button]$script:exportButton = $null
