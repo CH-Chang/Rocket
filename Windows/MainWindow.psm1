@@ -455,15 +455,33 @@ function onMethodComboBoxChange() {
 }
 
 function onRequestBodyContentTypeNoneClick() {
+    $group = $script:requestBodyLayout.Controls[0]
+    $script:requestBodyLayout.Controls.Clear()
+    $script:requestBodyLayout.Controls.Add($group, 0, 0)
 }
 
 function onRequestBodyContentTypeJsonClick() {
+    $group = $script:requestBodyLayout.Controls[0]
+    $script:requestBodyLayout.Controls.Clear()
+    $script:requestBodyLayout.Controls.Add($group, 0, 0)
+
+    $script:requestBodyLayout.Controls.Add($script:requestBodyJsonTextBox, 1, 0)
 }
 
 function onRequestBodyContentTypeXmlClick() {
+    $group = $script:requestBodyLayout.Controls[0]
+    $script:requestBodyLayout.Controls.Clear()
+    $script:requestBodyLayout.Controls.Add($group, 0, 0)
+
+    $script:requestBodyLayout.Controls.Add($script:requestBodyXmlTextBox, 1, 0)
 }
 
 function onRequestBodyContentTypeFormDataClick() {
+    $group = $script:requestBodyLayout.Controls[0]
+    $script:requestBodyLayout.Controls.Clear()
+    $script:requestBodyLayout.Controls.Add($group, 0, 0)
+
+    $script:requestBodyLayout.Controls.Add($script:requestBodyFormDataDataGridView, 1, 0)
 }
 
 function onCryptoButtonClick() {
