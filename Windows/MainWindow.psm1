@@ -1,8 +1,34 @@
 ﻿$script:window = $null
+
 $script:importButton = $null
 $script:exportButton = $null
+$script:removeButton = $null
+$script:addButton = $null
+$script:dataListBox = $null
+
 $script:methodComboBox = $null
-$script:urlInput = $null
+$script:urlTextBox = $null
+$script:sendButton = $null
+
+$script:requestHeaderDataGridView = $null
+$script:requestBodyContentTypeNone = $null
+$script:requestBodyContentTypeJson = $null
+$script:requestBodyContentTypeXml = $null
+$script:requestBodyContentTypeFormData = $null
+$script:requestBodyLayout = $null
+$script:requestBodyJsonTextBox = $null
+$script:requestBodyXmlTextBox = $null
+$script:requestBodyFormDataDataGridView = $null
+
+
+$script:responseStatusLabel = $null
+$script:responseHeaderDataGridView = $null
+$script:responseBodyTextBox = $null
+
+$script:cryptoButton = $null
+$script:hashButton = $null
+$script:aboutButton = $null
+$script:settingButton = $null
 
 function Init() {
     InitDenp
@@ -36,17 +62,17 @@ function InitLeftView ([System.Windows.Forms.TableLayoutPanel]$mainLayout) {
     $exportButton.Font = '微軟正黑體,10pt'
     $layout.Controls.Add($exportButton, 1, 0)
 
-    $exportButton = New-Object System.Windows.Forms.Button
-    $exportButton.Text = '刪除所選'
-    $exportButton.Dock = 'Fill'
-    $exportButton.Font = '微軟正黑體,10pt'
-    $layout.Controls.Add($exportButton, 0, 1)
+    $removeButton = New-Object System.Windows.Forms.Button
+    $removeButton.Text = '刪除所選'
+    $removeButton.Dock = 'Fill'
+    $removeButton.Font = '微軟正黑體,10pt'
+    $layout.Controls.Add($removeButton, 0, 1)
 
-    $exportButton = New-Object System.Windows.Forms.Button
-    $exportButton.Text = '新增當前'
-    $exportButton.Dock = 'Fill'
-    $exportButton.Font = '微軟正黑體,10pt'
-    $layout.Controls.Add($exportButton, 1, 1)
+    $addButton = New-Object System.Windows.Forms.Button
+    $addButton.Text = '新增當前'
+    $addButton.Dock = 'Fill'
+    $addButton.Font = '微軟正黑體,10pt'
+    $layout.Controls.Add($addButton, 1, 1)
 
     $dataListBox = New-Object System.Windows.Forms.ListBox
     $dataListBox.Dock = 'Fill'
@@ -54,6 +80,12 @@ function InitLeftView ([System.Windows.Forms.TableLayoutPanel]$mainLayout) {
     $layout.SetColumnSpan($dataListBox, 2)
 
     $mainLayout.Controls.Add($layout, 0, 0)
+
+    $script:importButton = $importButton
+    $script:exportButton = $exportButton
+    $script:removeButton = $removeButton
+    $script:addButton = $addButton
+    $script:dataListBox = $dataListBox
 }
 
 function InitRightView ([System.Windows.Forms.TableLayoutPanel]$mainLayout) {
@@ -107,6 +139,10 @@ function InitRightTopView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) 
     $layout.Controls.Add($sendButton, 2, 0)
 
     $rightLayout.Controls.Add($layout)
+
+    $script:methodComboBox = $methodComboBox
+    $script:urlTextBox = $urlTextBox
+    $script:sendButton = $sendButton
 }
 
 function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) {
@@ -195,46 +231,51 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyContentTypeFormData.Text = 'application/form-data'
     $requestBodyContentTypeGroupPanel.Controls.Add($requestBodyContentTypeFormData)
 
-    # ----
-    # $requestBodyJsonTextBox = New-Object System.Windows.Forms.TextBox
-    # $requestBodyJsonTextBox.Dock = 'Fill'
-    # $requestBodyJsonTextBox.Multiline = $true
-    # $requestBodyJsonTextBox.Font = '微軟正黑體,10pt'
-    # $requestBodyLayout.Controls.Add($requestBodyJsonTextBox, 1, 0)
+    $requestBodyJsonTextBox = New-Object System.Windows.Forms.TextBox
+    $requestBodyJsonTextBox.Dock = 'Fill'
+    $requestBodyJsonTextBox.Multiline = $true
+    $requestBodyJsonTextBox.Font = '微軟正黑體,10pt'
 
-    # $requestBodyXmlTextBox = New-Object System.Windows.Forms.TextBox
-    # $requestBodyXmlTextBox.Dock = 'Fill'
-    # $requestBodyXmlTextBox.Multiline = $true
-    # $requestBodyXmlTextBox.Font = '微軟正黑體,10pt'
-    # $requestBodyLayout.Controls.Add($requestBodyXmlTextBox, 1, 0)
+    $requestBodyXmlTextBox = New-Object System.Windows.Forms.TextBox
+    $requestBodyXmlTextBox.Dock = 'Fill'
+    $requestBodyXmlTextBox.Multiline = $true
+    $requestBodyXmlTextBox.Font = '微軟正黑體,10pt'
 
-    # $requestBodyFormDataDataGridView = New-Object System.Windows.Forms.DataGridView
-    # $requestBodyFormDataDataGridView.Dock = 'Fill'
-    # $requestBodyFormDataDataGridView.ColumnHeadersVisible = $true
-    # $requestBodyLayout.Controls.Add($requestBodyFormDataDataGridView, 1, 0)
+    $requestBodyFormDataDataGridView = New-Object System.Windows.Forms.DataGridView
+    $requestBodyFormDataDataGridView.Dock = 'Fill'
+    $requestBodyFormDataDataGridView.ColumnHeadersVisible = $true
 
-    # $requestBodyFormDataKeyDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
-    # $requestBodyFormDataKeyDataGridViewTextBoxColumn.HeaderText = '名稱'
-    # $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataKeyDataGridViewTextBoxColumn)
+    $requestBodyFormDataKeyDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+    $requestBodyFormDataKeyDataGridViewTextBoxColumn.HeaderText = '名稱'
+    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataKeyDataGridViewTextBoxColumn)
 
-    # $requestBodyFormDataTypeDataGridViewComboBoxColumn = New-Object System.Windows.Forms.DataGridViewComboBoxColumn
-    # $requestBodyFormDataTypeDataGridViewComboBoxColumn.HeaderText = '類型'
-    # $requestBodyFormDataTypeDataGridViewComboBoxColumn.Items.Add('檔案')
-    # $requestBodyFormDataTypeDataGridViewComboBoxColumn.Items.Add('文字')
-    # $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTypeDataGridViewComboBoxColumn)
+    $requestBodyFormDataTypeDataGridViewComboBoxColumn = New-Object System.Windows.Forms.DataGridViewComboBoxColumn
+    $requestBodyFormDataTypeDataGridViewComboBoxColumn.HeaderText = '類型'
+    $requestBodyFormDataTypeDataGridViewComboBoxColumn.Items.Add('檔案')
+    $requestBodyFormDataTypeDataGridViewComboBoxColumn.Items.Add('文字')
+    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTypeDataGridViewComboBoxColumn)
 
-    # $requestBodyFormDataTextDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
-    # $requestBodyFormDataTextDataGridViewTextBoxColumn.HeaderText = '文字'
-    # $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTextDataGridViewTextBoxColumn)
+    $requestBodyFormDataTextDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+    $requestBodyFormDataTextDataGridViewTextBoxColumn.HeaderText = '文字'
+    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTextDataGridViewTextBoxColumn)
 
-    # $requestBodyFormDataSelectFileDataGridViewButtonColumn = New-Object System.Windows.Forms.DataGridViewButtonColumn
-    # $requestBodyFormDataSelectFileDataGridViewButtonColumn.HeaderText = '檔案'
-    # $requestBodyFormDataSelectFileDataGridViewButtonColumn.Text = '選擇檔案'
-    # $requestBodyFormDataSelectFileDataGridViewButtonColumn.UseColumnTextForButtonValue = $true
-    # $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataSelectFileDataGridViewButtonColumn)
-    # ----
+    $requestBodyFormDataSelectFileDataGridViewButtonColumn = New-Object System.Windows.Forms.DataGridViewButtonColumn
+    $requestBodyFormDataSelectFileDataGridViewButtonColumn.HeaderText = '檔案'
+    $requestBodyFormDataSelectFileDataGridViewButtonColumn.Text = '選擇檔案'
+    $requestBodyFormDataSelectFileDataGridViewButtonColumn.UseColumnTextForButtonValue = $true
+    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataSelectFileDataGridViewButtonColumn)
 
     $rightLayout.Controls.Add($layout)
+
+    $script:requestHeaderDataGridView = $requestHeaderDataGridView
+    $script:requestBodyLayout = $requestBodyLayout
+    $script:requestBodyJsonTextBox = $requestBodyJsonTextBox
+    $script:requestBodyXmlTextBox = $requestBodyXmlTextBox
+    $script:requestBodyFormDataDataGridView = $requestBodyFormDataDataGridView
+    $script:requestBodyContentTypeNone = $requestBodyContentTypeNone
+    $script:requestBodyContentTypeJson = $requestBodyContentTypeJson
+    $script:requestBodyContentTypeXml = $requestBodyContentTypeXml
+    $script:requestBodyContentTypeFormData = $requestBodyContentTypeFormData
 }
 
 function InitRightResponseView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) {
@@ -295,13 +336,17 @@ function InitRightResponseView ([System.Windows.Forms.TableLayoutPanel]$rightLay
     $responseBodyLayout.ColumnCount = 1
     $responseBodyTabPage.Controls.Add($responseBodyLayout)
 
-    $requestBodyTextBox = New-Object System.Windows.Forms.TextBox
-    $requestBodyTextBox.Dock = 'Fill'
-    $requestBodyTextBox.Multiline = $true
-    $requestBodyTextBox.Font = '微軟正黑體,10pt'
-    $responseBodyLayout.Controls.Add($requestBodyTextBox, 0, 0)
+    $responseBodyTextBox = New-Object System.Windows.Forms.TextBox
+    $responseBodyTextBox.Dock = 'Fill'
+    $responseBodyTextBox.Multiline = $true
+    $responseBodyTextBox.Font = '微軟正黑體,10pt'
+    $responseBodyLayout.Controls.Add($responseBodyTextBox, 0, 0)
 
     $rightLayout.Controls.Add($layout)
+
+    $script:responseStatusLabel = $responseStatusLabel
+    $script:responseHeaderDataGridView = $responseHeaderDataGridView
+    $script:responseBodyTextBox = $responseBodyTextBox
 }
 
 function InitRightBottomView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) {
@@ -341,6 +386,11 @@ function InitRightBottomView ([System.Windows.Forms.TableLayoutPanel]$rightLayou
     $layout.Controls.Add($aboutButton, 3, 0)
 
     $rightLayout.Controls.Add($layout)
+
+    $script:cryptoButton = $cryptoButton
+    $script:hashButton = $hashButton
+    $script:settingButton = $settingButton
+    $script:aboutButton = $aboutButton
 }
 
 function InitView() {
