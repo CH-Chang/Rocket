@@ -1,34 +1,34 @@
-﻿$script:window = $null
+﻿[System.Windows.Forms.Form]$script:window = $null
 
-$script:importButton = $null
-$script:exportButton = $null
-$script:removeButton = $null
-$script:addButton = $null
-$script:dataListBox = $null
+[System.Windows.Forms.Button]$script:importButton = $null
+[System.Windows.Forms.Button]$script:exportButton = $null
+[System.Windows.Forms.Button]$script:removeButton = $null
+[System.Windows.Forms.Button]$script:addButton = $null
+[System.Windows.Forms.ListBox]$script:dataListBox = $null
 
-$script:methodComboBox = $null
-$script:urlTextBox = $null
-$script:sendButton = $null
+[System.Windows.Forms.ComboBox]$script:methodComboBox = $null
+[System.Windows.Forms.TextBox]$script:urlTextBox = $null
+[System.Windows.Forms.Button]$script:sendButton = $null
 
-$script:requestHeaderDataGridView = $null
-$script:requestBodyContentTypeNone = $null
-$script:requestBodyContentTypeJson = $null
-$script:requestBodyContentTypeXml = $null
-$script:requestBodyContentTypeFormData = $null
-$script:requestBodyLayout = $null
-$script:requestBodyJsonTextBox = $null
-$script:requestBodyXmlTextBox = $null
-$script:requestBodyFormDataDataGridView = $null
+[System.Windows.Forms.DataGridView]$script:requestHeaderDataGridView = $null
+[System.Windows.Forms.RadioButton]$script:requestBodyContentTypeNone = $null
+[System.Windows.Forms.RadioButton]$script:requestBodyContentTypeJson = $null
+[System.Windows.Forms.RadioButton]$script:requestBodyContentTypeXml = $null
+[System.Windows.Forms.RadioButton]$script:requestBodyContentTypeFormData = $null
+[System.Windows.Forms.TableLayoutPanel]$script:requestBodyLayout = $null
+[System.Windows.Forms.TextBox]$script:requestBodyJsonTextBox = $null
+[System.Windows.Forms.TextBox]$script:requestBodyXmlTextBox = $null
+[System.Windows.Forms.DataGridView]$script:requestBodyFormDataDataGridView = $null
 
 
-$script:responseStatusLabel = $null
-$script:responseHeaderDataGridView = $null
-$script:responseBodyTextBox = $null
+[System.Windows.Forms.Label]$script:responseStatusLabel = $null
+[System.Windows.Forms.DataGridView]$script:responseHeaderDataGridView = $null
+[System.Windows.Forms.TextBox]$script:responseBodyTextBox = $null
 
-$script:cryptoButton = $null
-$script:hashButton = $null
-$script:aboutButton = $null
-$script:settingButton = $null
+[System.Windows.Forms.Button]$script:cryptoButton = $null
+[System.Windows.Forms.Button]$script:hashButton = $null
+[System.Windows.Forms.Button]$script:aboutButton = $null
+[System.Windows.Forms.Button]$script:settingButton = $null
 
 function Init() {
     InitDenp
