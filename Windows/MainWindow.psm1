@@ -417,7 +417,65 @@ function InitView() {
 }
 
 function InitInteraction() {
+    $script:importButton.add_click({ onImportButtonClick })
+    $script:exportButton.add_click({ onExportButtonClick })
+    $script:removeButton.add_click({ onRemoveButtonClick })
+    $script:addButton.add_click({ onAddButtonClick })
 
+    $script:methodComboBox.add_SelectedIndexChanged({ onMethodComboBoxChange })
+    $script:sendButton.add_click({ onSendButtonClick })
+
+    $script:requestBodyContentTypeNone.add_click({ onRequestBodyContentTypeNoneClick })
+    $script:requestBodyContentTypeJson.add_click({ onRequestBodyContentTypeJsonClick })
+    $script:requestBodyContentTypeXml.add_click({ onRequestBodyContentTypeXmlClick })
+    $script:requestBodyContentTypeFormData.add_click({ onRequestBodyContentTypeFormDataClick })
+
+    $script:cryptoButton.add_click({ onCryptoButtonClick })
+    $script:hashButton.add_click({ onHashButtonClick })
+    $script:aboutButton.add_click({ onAboutButtonClick })
+    $script:settingButton.add_click({ onSettingButtonClick })
+}
+
+function onImportButtonClick() {
+}
+
+function onExportButtonClick() {
+}
+
+function onRemoveButtonClick() {
+}
+
+function onAddButtonClick() {
+}
+
+function onSendButtonClick() {
+}
+
+function onMethodComboBoxChange() {
+}
+
+function onRequestBodyContentTypeNoneClick() {
+}
+
+function onRequestBodyContentTypeJsonClick() {
+}
+
+function onRequestBodyContentTypeXmlClick() {
+}
+
+function onRequestBodyContentTypeFormDataClick() {
+}
+
+function onCryptoButtonClick() {
+}
+
+function onHashButtonClick() {
+}
+
+function onAboutButtonClick() {
+}
+
+function onSettingButtonClick() {
 }
 
 function RunUI() {
