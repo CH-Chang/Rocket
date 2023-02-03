@@ -380,7 +380,7 @@ function InitRightBottomView ([System.Windows.Forms.TableLayoutPanel]$rightLayou
     $layout.Controls.Add($settingButton, 2, 0)
 
     $aboutButton = New-Object System.Windows.Forms.Button
-    $aboutButton.Text = '關於我們'
+    $aboutButton.Text = '關於程式'
     $aboutButton.Dock = 'Fill'
     $aboutButton.Font = '微軟正黑體,10pt'
     $layout.Controls.Add($aboutButton, 3, 0)
@@ -491,6 +491,17 @@ function onHashButtonClick() {
 }
 
 function onAboutButtonClick() {
+    $return = [System.Windows.Forms.MessageBox]::Show(
+        "版權所有© 2023 CHIH HSIANG CHANG",
+        '關於程式',
+        [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+        [System.Windows.Forms.MessageBoxIcon]::Information)
+
+    if ($return -ne [System.Windows.Forms.DialogResult]::OK) {
+        return
+    }
+
+    Start-Process 'https://github.com/CH-Chang/Rocket'
 }
 
 function onSettingButtonClick() {
