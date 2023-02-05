@@ -26,6 +26,9 @@
 [System.Windows.Forms.TextBox]$script:requestBodyXmlTextBox = $null
 [System.Windows.Forms.DataGridView]$script:requestBodyFormDataDataGridView = $null
 
+[System.Windows.Forms.DataGridViewComboBoxColumn]$script:requestBodyFormDataTypeDataGridViewComboBoxColumn = $null
+[System.Windows.Forms.DataGridViewButtonColumn]$script:requestBodyFormDataSelectFileDataGridViewButtonColumn = $null
+[System.Windows.Forms.DataGridViewTextBoxColumn]$script:requestBodyFormDataTextDataGridViewTextBoxColumn = $null
 
 [System.Windows.Forms.Label]$script:responseStatusLabel = $null
 [System.Windows.Forms.DataGridView]$script:responseHeaderDataGridView = $null
@@ -260,15 +263,19 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyFormDataTypeDataGridViewComboBoxColumn.Items.Add('文字')
     $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTypeDataGridViewComboBoxColumn)
 
-    $requestBodyFormDataTextDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
-    $requestBodyFormDataTextDataGridViewTextBoxColumn.HeaderText = '文字'
-    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTextDataGridViewTextBoxColumn)
-
     $requestBodyFormDataSelectFileDataGridViewButtonColumn = New-Object System.Windows.Forms.DataGridViewButtonColumn
     $requestBodyFormDataSelectFileDataGridViewButtonColumn.HeaderText = '檔案'
     $requestBodyFormDataSelectFileDataGridViewButtonColumn.Text = '選擇檔案'
     $requestBodyFormDataSelectFileDataGridViewButtonColumn.UseColumnTextForButtonValue = $true
     $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataSelectFileDataGridViewButtonColumn)
+
+    $requestBodyFormDataTextDataGridViewTextBoxColumn = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+    $requestBodyFormDataTextDataGridViewTextBoxColumn.HeaderText = '內容'
+    $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataTextDataGridViewTextBoxColumn)
+
+    $requestBodyFormDataDataGridView.Columns[0].AutoSizeMode = [System.Windows.Forms.DataGridViewAutoSizeColumnMode]::DisplayedCells
+    $requestBodyFormDataDataGridView.Columns[1].AutoSizeMode = [System.Windows.Forms.DataGridViewAutoSizeColumnMode]::DisplayedCells
+    $requestBodyFormDataDataGridView.Columns[3].AutoSizeMode = [System.Windows.Forms.DataGridViewAutoSizeColumnMode]::Fill
 
     $rightLayout.Controls.Add($layout)
 
@@ -285,6 +292,10 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $script:requestBodyContentTypeJson = $requestBodyContentTypeJson
     $script:requestBodyContentTypeXml = $requestBodyContentTypeXml
     $script:requestBodyContentTypeFormData = $requestBodyContentTypeFormData
+
+    $script:requestBodyFormDataTypeDataGridViewComboBoxColumn = $requestBodyFormDataTypeDataGridViewComboBoxColumn
+    $script:requestBodyFormDataSelectFileDataGridViewButtonColumn = $requestBodyFormDataSelectFileDataGridViewButtonColumn
+    $script:requestBodyFormDataTextDataGridViewTextBoxColumn = $requestBodyFormDataTextDataGridViewTextBoxColumn
 }
 
 function InitRightResponseView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) {
@@ -426,41 +437,105 @@ function InitView() {
 }
 
 function InitInteraction() {
-    $script:importButton.add_click({ onImportButtonClick })
-    $script:exportButton.add_click({ onExportButtonClick })
-    $script:removeButton.add_click({ onRemoveButtonClick })
-    $script:addButton.add_click({ onAddButtonClick })
+    $script:importButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onImportButtonClick $object $e
+    })
+    $script:exportButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onExportButtonClick $object $e
+    })
+    $script:removeButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onRemoveButtonClick $object $e
+    })
+    $script:addButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onAddButtonClick $object $e
+    })
 
-    $script:methodComboBox.add_SelectedIndexChanged({ onMethodComboBoxChange })
-    $script:sendButton.add_click({ onSendButtonClick })
+    $script:methodComboBox.add_SelectedIndexChanged({
+        param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
+        onMethodComboBoxChange
+    })
+    $script:sendButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onSendButtonClick $object $e
+    })
 
-    $script:requestBodyContentTypeNone.add_click({ onRequestBodyContentTypeNoneClick })
-    $script:requestBodyContentTypeJson.add_click({ onRequestBodyContentTypeJsonClick })
-    $script:requestBodyContentTypeXml.add_click({ onRequestBodyContentTypeXmlClick })
-    $script:requestBodyContentTypeFormData.add_click({ onRequestBodyContentTypeFormDataClick })
+    $script:requestBodyContentTypeNone.add_click({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        onRequestBodyContentTypeNoneClick $object $e
+    })
+    $script:requestBodyContentTypeJson.add_click({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        onRequestBodyContentTypeJsonClick $object $e
+    })
+    $script:requestBodyContentTypeXml.add_click({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        onRequestBodyContentTypeXmlClick $object $e
+    })
+    $script:requestBodyContentTypeFormData.add_click({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        onRequestBodyContentTypeFormDataClick $object $e
+    })
 
-    $script:cryptoButton.add_click({ onCryptoButtonClick })
-    $script:hashButton.add_click({ onHashButtonClick })
-    $script:aboutButton.add_click({ onAboutButtonClick })
-    $script:settingButton.add_click({ onSettingButtonClick })
+    $script:cryptoButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onCryptoButtonClick $object $e
+    })
+    $script:hashButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onHashButtonClick $object $e
+    })
+    $script:aboutButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onAboutButtonClick $object $e
+    })
+    $script:settingButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        onSettingButtonClick $object $e
+    })
+
+    $script:requestBodyFormDataDataGridView.add_CellValueChanged({
+        param([System.Windows.Forms.DataGridView]$object, [System.Windows.Forms.DataGridViewCellEventArgs]$e)
+        onRequestBodyFormDataDataGridViewCellValueChange $object $e
+    })
+
+    $script:requestBodyFormDataDataGridView.add_CellContentClick({
+        param([System.Windows.Forms.DataGridView]$object, [System.Windows.Forms.DataGridViewCellEventArgs]$e)
+        onRequestBodyFormDataDataGridViewCellContentClick $object $e
+    })
 }
 
-function onImportButtonClick() {
+function onImportButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onExportButtonClick() {
+function onExportButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onRemoveButtonClick() {
+function onRemoveButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onAddButtonClick() {
+function onAddButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onSendButtonClick() {
+function onSendButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onMethodComboBoxChange() {
+function onMethodComboBoxChange(
+    [System.Windows.Forms.ComboBox]$object,
+    [System.EventArgs]$e) {
     $method = $script:methodComboBox.SelectedItem
 
     $script:requestTabControl.Controls.Clear()
@@ -471,7 +546,9 @@ function onMethodComboBoxChange() {
     }
 }
 
-function onRequestBodyContentTypeNoneClick() {
+function onRequestBodyContentTypeNoneClick(
+    [System.Windows.Forms.RadioButton]$object,
+    [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
@@ -485,7 +562,9 @@ function onRequestBodyContentTypeNoneClick() {
     $script:requestHeaderDataGridView.Rows.RemoveAt($index)
 }
 
-function onRequestBodyContentTypeJsonClick() {
+function onRequestBodyContentTypeJsonClick(
+    [System.Windows.Forms.RadioButton]$object,
+    [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
@@ -502,7 +581,9 @@ function onRequestBodyContentTypeJsonClick() {
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/json')
 }
 
-function onRequestBodyContentTypeXmlClick() {
+function onRequestBodyContentTypeXmlClick(
+    [System.Windows.Forms.RadioButton]$object,
+    [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
@@ -519,7 +600,9 @@ function onRequestBodyContentTypeXmlClick() {
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/xml')
 }
 
-function onRequestBodyContentTypeFormDataClick() {
+function onRequestBodyContentTypeFormDataClick(
+    [System.Windows.Forms.RadioButton]$object,
+    [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
@@ -536,13 +619,19 @@ function onRequestBodyContentTypeFormDataClick() {
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'multipart/form-data')
 }
 
-function onCryptoButtonClick() {
+function onCryptoButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onHashButtonClick() {
+function onHashButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
 }
 
-function onAboutButtonClick() {
+function onAboutButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
     $return = [System.Windows.Forms.MessageBox]::Show(
         "版權所有© 2023 CHIH HSIANG CHANG",
         '關於程式',
@@ -556,7 +645,55 @@ function onAboutButtonClick() {
     Start-Process 'https://github.com/CH-Chang/Rocket'
 }
 
-function onSettingButtonClick() {
+function onSettingButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e) {
+}
+
+function onRequestBodyFormDataDataGridViewCellValueChange(
+    [System.Windows.Forms.DataGridView]$object,
+    [System.Windows.Forms.DataGridViewCellEventArgs]$e) {
+
+    $rowIndex = $e.RowIndex
+    $columnIndex = $e.ColumnIndex
+
+    $row = $object.Rows[$rowIndex]
+
+    [System.Windows.Forms.DataGridViewComboBoxCell]$typeCell = $row.Cells[1]
+    if ($null -eq $typeCell.Value) {
+        $typeCell.Value = $object.Columns[1].Items[0]
+    }
+
+    if ($columnIndex -eq 3) {
+        $typeCell.Value = $object.Columns[1].Items[1]
+    }
+}
+
+function onRequestBodyFormDataDataGridViewCellContentClick(
+    [System.Windows.Forms.DataGridView]$object,
+    [System.Windows.Forms.DataGridViewCellEventArgs]$e) {
+
+    $rowIndex = $e.RowIndex
+    $columnIndex = $e.ColumnIndex
+
+    $row = $object.Rows[$rowIndex]
+
+    [System.Windows.Forms.DataGridViewComboBoxCell]$typeCell = $row.Cells[1]
+    [System.Windows.Forms.DataGridViewTextBoxCell]$textCell = $row.Cells[3]
+
+    if ($columnIndex -eq 2) {
+        $dialog = New-Object System.Windows.Forms.OpenFileDialog
+        $dialog.Title = '請選擇檔案'
+        $dialog.Filter = '檔案 (*.*)| *.*'
+
+        $result = $dialog.ShowDialog()
+        if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+            return
+        }
+
+        $textCell.Value = $dialog.FileName
+        $typeCell.Value = $object.Columns[1].Items[0]
+    }
 }
 
 function FindIndexInDataGridView (
@@ -565,11 +702,8 @@ function FindIndexInDataGridView (
     [int]$columnIndex) {
     $index = -1
     $rowCount = $dataGridView.Rows.Count
-    for ($i = 0; $i -le $rowCount; $i++) {
+    for ($i = 0; $i -lt $rowCount; $i++) {
         $row = $dataGridView.Rows[$i]
-        if ($null -eq $row) {
-            continue
-        }
 
         $column = $row.Cells[$columnIndex]
         if ($null -eq $column) {
