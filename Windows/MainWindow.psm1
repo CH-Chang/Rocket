@@ -475,6 +475,14 @@ function onRequestBodyContentTypeNoneClick() {
     $group = $script:requestBodyLayout.Controls[0]
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
+
+    $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+
+    if ($index -eq -1) {
+        return
+    }
+
+    $script:requestHeaderDataGridView.Rows.RemoveAt($index)
 }
 
 function onRequestBodyContentTypeJsonClick() {
@@ -483,6 +491,15 @@ function onRequestBodyContentTypeJsonClick() {
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
 
     $script:requestBodyLayout.Controls.Add($script:requestBodyJsonTextBox, 1, 0)
+
+    $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+
+    if ($index -ne -1) {
+        $script:requestHeaderDataGridView.Rows[$index].Cells[1].Value = 'application/json'
+        return
+    }
+
+    $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/json')
 }
 
 function onRequestBodyContentTypeXmlClick() {
@@ -491,6 +508,15 @@ function onRequestBodyContentTypeXmlClick() {
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
 
     $script:requestBodyLayout.Controls.Add($script:requestBodyXmlTextBox, 1, 0)
+
+    $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+
+    if ($index -ne -1) {
+        $script:requestHeaderDataGridView.Rows[$index].Cells[1].Value = 'application/xml'
+        return
+    }
+
+    $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/xml')
 }
 
 function onRequestBodyContentTypeFormDataClick() {
@@ -499,6 +525,15 @@ function onRequestBodyContentTypeFormDataClick() {
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
 
     $script:requestBodyLayout.Controls.Add($script:requestBodyFormDataDataGridView, 1, 0)
+
+    $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+
+    if ($index -ne -1) {
+        $script:requestHeaderDataGridView.Rows[$index].Cells[1].Value = 'multipart/form-data'
+        return
+    }
+
+    $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'multipart/form-data')
 }
 
 function onCryptoButtonClick() {
@@ -522,6 +557,36 @@ function onAboutButtonClick() {
 }
 
 function onSettingButtonClick() {
+}
+
+function FindIndexInDataGridView (
+    [System.Windows.Forms.DataGridView]$dataGridView,
+    [string]$value,
+    [int]$columnIndex) {
+    $index = -1
+    $rowCount = $dataGridView.Rows.Count
+    for ($i = 0; $i -le $rowCount; $i++) {
+        $row = $dataGridView.Rows[$i]
+        if ($null -eq $row) {
+            continue
+        }
+
+        $column = $row.Cells[$columnIndex]
+        if ($null -eq $column) {
+            continue
+        }
+
+        $cellValue = $column.Value
+        if ($null -eq $cellValue) {
+            continue
+        }
+
+        if ($cellValue.ToLower() -eq $value) {
+            $index = $i
+            break
+        }
+    }
+    return $index
 }
 
 function RunUI() {
