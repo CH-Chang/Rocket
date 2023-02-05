@@ -12,6 +12,10 @@
 [System.Windows.Forms.TextBox]$script:urlTextBox = $null
 [System.Windows.Forms.Button]$script:sendButton = $null
 
+[System.Windows.Forms.TabControl]$script:requestTabControl = $null
+[System.Windows.Forms.TabPage]$script:requestHeaderTabPage = $null
+[System.Windows.Forms.TabPage]$script:requestBodyTabPage = $null
+
 [System.Windows.Forms.DataGridView]$script:requestHeaderDataGridView = $null
 [System.Windows.Forms.RadioButton]$script:requestBodyContentTypeNone = $null
 [System.Windows.Forms.RadioButton]$script:requestBodyContentTypeJson = $null
@@ -189,7 +193,6 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyTabPage.TabIndex = 2
     $requestBodyTabPage.Text = '請求內容'
     $requestBodyTabPage.Font = '微軟正黑體,10pt,style=Bold'
-    $requestTabControl.Controls.Add($requestBodyTabPage)
 
     $requestBodyLayout = New-Object System.Windows.Forms.TableLayoutPanel
     $requestBodyLayout.Dock = 'Fill'
@@ -268,6 +271,10 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyFormDataDataGridView.Columns.Add($requestBodyFormDataSelectFileDataGridViewButtonColumn)
 
     $rightLayout.Controls.Add($layout)
+
+    $script:requestTabControl = $requestTabControl
+    $script:requestHeaderTabPage = $requestHeaderTabPage
+    $script:requestBodyTabPage = $requestBodyTabPage
 
     $script:requestHeaderDataGridView = $requestHeaderDataGridView
     $script:requestBodyLayout = $requestBodyLayout
@@ -454,6 +461,14 @@ function onSendButtonClick() {
 }
 
 function onMethodComboBoxChange() {
+    $method = $script:methodComboBox.SelectedItem
+
+    $script:requestTabControl.Controls.Clear()
+    $script:requestTabControl.Controls.Add($script:requestHeaderTabPage)
+
+    if ($method -eq 'POST' -or $method -eq 'PUT') {
+        $script:requestTabControl.Controls.Add($script:requestBodyTabPage)
+    }
 }
 
 function onRequestBodyContentTypeNoneClick() {
