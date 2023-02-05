@@ -1,4 +1,6 @@
 ﻿Import-Module '.\Utils\Requester.psm1'
+Import-Module '.\Utils\Settings.psm1'
+Import-Module '.\Windows\SettingWindow.psm1'
 
 [System.Windows.Forms.Form]$script:window = $null
 
@@ -756,6 +758,7 @@ function onAboutButtonClick(
 function onSettingButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+    RunSetting
 }
 
 function onRequestBodyFormDataDataGridViewCellValueChange(
@@ -935,16 +938,21 @@ function GenerateRequestJsonBody() {
         return @($false, $null)
     }
 
-    try {
-        ConvertFrom-Json $body
-    } catch {
-        [System.Windows.Forms.MessageBox]::Show(
-        '請確認請求體 JSON 字串內容格式正確',
-        '錯誤',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Error)  | Out-Null
-        return @($false, $null)
+    $verifyJson = GetVerifyJson
+
+    if ($verifyJson) {
+        try {
+            ConvertFrom-Json $body
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show(
+            '請確認請求體 JSON 字串內容格式正確',
+            '錯誤',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error)  | Out-Null
+            return @($false, $null)
+        }
     }
+
     return @($true, $body)
 }
 
@@ -959,16 +967,21 @@ function GenerateRequestXmlBody() {
         return @($false, $null)
     }
 
-    try {
-        [xml]$body
-    } catch {
-        [System.Windows.Forms.MessageBox]::Show(
-        '請確認請求體 XML 字串內容格式正確',
-        '錯誤',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
-        return @($false, $null)
+    $verifyXml = GetVerifyXml
+
+    if ($verifyXml) {
+        try {
+            [xml]$body
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show(
+            '請確認請求體 XML 字串內容格式正確',
+            '錯誤',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+            return @($false, $null)
+        }
     }
+
     return @($true, $body)
 }
 
