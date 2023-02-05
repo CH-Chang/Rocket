@@ -1,5 +1,6 @@
 ﻿Import-Module '.\Utils\Requester.psm1'
 Import-Module '.\Utils\Settings.psm1'
+Import-Module '.\Utils\Data.psm1'
 Import-Module '.\Windows\SettingWindow.psm1'
 
 [System.Windows.Forms.Form]$script:window = $null
@@ -534,6 +535,19 @@ function InitInteraction() {
 function onImportButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    $dialog.Title = '請選擇檔案'
+    $dialog.Filter = 'JSON檔案 (*.json)| *.json'
+
+    $result = $dialog.ShowDialog()
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        return
+    }
+
+    $filepath = $dialog.FileName
+    ReadData $filepath
+    LoadData
 }
 
 function onExportButtonClick(
@@ -732,11 +746,23 @@ function onRequestBodyContentTypeOtherClick(
 function onCryptoButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    [System.Windows.Forms.MessageBox]::Show(
+        '敬請期待',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
 }
 
 function onHashButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    [System.Windows.Forms.MessageBox]::Show(
+        '敬請期待',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
 }
 
 function onAboutButtonClick(
@@ -805,6 +831,18 @@ function onRequestBodyFormDataDataGridViewCellContentClick(
         $textCell.Value = $dialog.FileName
         $typeCell.Value = $object.Columns[1].Items[0]
     }
+}
+
+function LoadData() {
+    $allData = GetData
+
+    $script:dataListBox.BeginUpdate()
+    foreach ($data in $allData) {
+        $name = $data.name
+        $script:dataListBox.Items.Clear()
+        $script:dataListBox.Items.Add($name)
+    }
+    $script:dataListBox.EndUpdate()
 }
 
 function GenerateRequestMethod() {
