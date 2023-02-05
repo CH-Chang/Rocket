@@ -2,7 +2,7 @@ function Request(
     [string]$method,
     [string]$url,
     [string]$contentType,
-    $body) {
+    [System.Collections.Generic.Dictionary[[string],[string]]]$body) {
     Write-Host 'Request'
 }
 
