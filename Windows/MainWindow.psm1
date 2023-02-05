@@ -21,9 +21,11 @@
 [System.Windows.Forms.RadioButton]$script:requestBodyContentTypeJson = $null
 [System.Windows.Forms.RadioButton]$script:requestBodyContentTypeXml = $null
 [System.Windows.Forms.RadioButton]$script:requestBodyContentTypeFormData = $null
+[System.Windows.Forms.RadioButton]$script:requestBodyContentTypeOther = $null
 [System.Windows.Forms.TableLayoutPanel]$script:requestBodyLayout = $null
-[System.Windows.Forms.TextBox]$script:requestBodyJsonTextBox = $null
-[System.Windows.Forms.TextBox]$script:requestBodyXmlTextBox = $null
+[System.Windows.Forms.RichTextBox]$script:requestBodyRichJsonTextBox = $null
+[System.Windows.Forms.RichTextBox]$script:requestBodyXmlRichTextBox = $null
+[System.Windows.Forms.RichTextBox]$script:requestBodyOtherRichTextBox = $null
 [System.Windows.Forms.DataGridView]$script:requestBodyFormDataDataGridView = $null
 
 [System.Windows.Forms.DataGridViewComboBoxColumn]$script:requestBodyFormDataTypeDataGridViewComboBoxColumn = $null
@@ -32,7 +34,7 @@
 
 [System.Windows.Forms.Label]$script:responseStatusLabel = $null
 [System.Windows.Forms.DataGridView]$script:responseHeaderDataGridView = $null
-[System.Windows.Forms.TextBox]$script:responseBodyTextBox = $null
+[System.Windows.Forms.RichTextBox]$script:responseBodyRichTextBox = $null
 
 [System.Windows.Forms.Button]$script:cryptoButton = $null
 [System.Windows.Forms.Button]$script:hashButton = $null
@@ -139,6 +141,7 @@ function InitRightTopView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) 
     $urlTextBox.Dock = 'Fill'
     $urlTextBox.Font = '微軟正黑體,10pt'
     $urlTextBox.Multiline = $false
+    $urlTextBox.Text = 'http://localhost:3000'
     $layout.Controls.Add($urlTextBox, 1, 0)
 
     $sendButton = New-Object System.Windows.Forms.Button
@@ -207,11 +210,12 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyContentTypeGroupPanel = New-Object System.Windows.Forms.TableLayoutPanel
     $requestBodyContentTypeGroupPanel.Dock = 'Fill'
     $requestBodyContentTypeGroupPanel.CellBorderStyle = 'None'
-    $requestBodyContentTypeGroupPanel.RowCount = 4
-    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 25)))
-    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 25)))
-    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 25)))
-    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 25)))
+    $requestBodyContentTypeGroupPanel.RowCount = 5
+    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))
+    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))
+    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))
+    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))
+    $requestBodyContentTypeGroupPanel.RowStyles.Add((new-object System.Windows.Forms.RowStyle([System.Windows.Forms.SizeType]::Percent, 20)))
     $requestBodyLayout.Controls.Add($requestBodyContentTypeGroupPanel, 0, 0)
 
     $requestBodyContentTypeNone = New-Object System.Windows.Forms.RadioButton
@@ -239,15 +243,26 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
     $requestBodyContentTypeFormData.Text = 'application/form-data'
     $requestBodyContentTypeGroupPanel.Controls.Add($requestBodyContentTypeFormData)
 
-    $requestBodyJsonTextBox = New-Object System.Windows.Forms.TextBox
-    $requestBodyJsonTextBox.Dock = 'Fill'
-    $requestBodyJsonTextBox.Multiline = $true
-    $requestBodyJsonTextBox.Font = '微軟正黑體,10pt'
+    $requestBodyContentTypeOther = New-Object System.Windows.Forms.RadioButton
+    $requestBodyContentTypeOther.Dock = 'Fill'
+    $requestBodyContentTypeOther.Font = '微軟正黑體,10pt'
+    $requestBodyContentTypeOther.Text = 'other'
+    $requestBodyContentTypeGroupPanel.Controls.Add($requestBodyContentTypeOther)
 
-    $requestBodyXmlTextBox = New-Object System.Windows.Forms.TextBox
-    $requestBodyXmlTextBox.Dock = 'Fill'
-    $requestBodyXmlTextBox.Multiline = $true
-    $requestBodyXmlTextBox.Font = '微軟正黑體,10pt'
+    $requestBodyRichJsonTextBox = New-Object System.Windows.Forms.RichTextBox
+    $requestBodyRichJsonTextBox.Dock = 'Fill'
+    $requestBodyRichJsonTextBox.Multiline = $true
+    $requestBodyRichJsonTextBox.Font = '微軟正黑體,10pt'
+
+    $requestBodyXmlRichTextBox = New-Object System.Windows.Forms.RichTextBox
+    $requestBodyXmlRichTextBox.Dock = 'Fill'
+    $requestBodyXmlRichTextBox.Multiline = $true
+    $requestBodyXmlRichTextBox.Font = '微軟正黑體,10pt'
+
+    $requestBodyOtherRichTextBox = New-Object System.Windows.Forms.RichTextBox
+    $requestBodyOtherRichTextBox.Dock = 'Fill'
+    $requestBodyOtherRichTextBox.Multiline = $true
+    $requestBodyOtherRichTextBox.Font = '微軟正黑體,10pt'
 
     $requestBodyFormDataDataGridView = New-Object System.Windows.Forms.DataGridView
     $requestBodyFormDataDataGridView.Dock = 'Fill'
@@ -285,13 +300,15 @@ function InitRightRequestView ([System.Windows.Forms.TableLayoutPanel]$rightLayo
 
     $script:requestHeaderDataGridView = $requestHeaderDataGridView
     $script:requestBodyLayout = $requestBodyLayout
-    $script:requestBodyJsonTextBox = $requestBodyJsonTextBox
-    $script:requestBodyXmlTextBox = $requestBodyXmlTextBox
+    $script:requestBodyRichJsonTextBox = $requestBodyRichJsonTextBox
+    $script:requestBodyXmlRichTextBox = $requestBodyXmlRichTextBox
+    $script:requestBodyOtherRichTextBox = $requestBodyOtherRichTextBox
     $script:requestBodyFormDataDataGridView = $requestBodyFormDataDataGridView
     $script:requestBodyContentTypeNone = $requestBodyContentTypeNone
     $script:requestBodyContentTypeJson = $requestBodyContentTypeJson
     $script:requestBodyContentTypeXml = $requestBodyContentTypeXml
     $script:requestBodyContentTypeFormData = $requestBodyContentTypeFormData
+    $script:requestBodyContentTypeOther = $requestBodyContentTypeOther
 
     $script:requestBodyFormDataTypeDataGridViewComboBoxColumn = $requestBodyFormDataTypeDataGridViewComboBoxColumn
     $script:requestBodyFormDataSelectFileDataGridViewButtonColumn = $requestBodyFormDataSelectFileDataGridViewButtonColumn
@@ -356,17 +373,17 @@ function InitRightResponseView ([System.Windows.Forms.TableLayoutPanel]$rightLay
     $responseBodyLayout.ColumnCount = 1
     $responseBodyTabPage.Controls.Add($responseBodyLayout)
 
-    $responseBodyTextBox = New-Object System.Windows.Forms.TextBox
-    $responseBodyTextBox.Dock = 'Fill'
-    $responseBodyTextBox.Multiline = $true
-    $responseBodyTextBox.Font = '微軟正黑體,10pt'
-    $responseBodyLayout.Controls.Add($responseBodyTextBox, 0, 0)
+    $responseBodyRichTextBox = New-Object System.Windows.Forms.RichTextBox
+    $responseBodyRichTextBox.Dock = 'Fill'
+    $responseBodyRichTextBox.Multiline = $true
+    $responseBodyRichTextBox.Font = '微軟正黑體,10pt'
+    $responseBodyLayout.Controls.Add($responseBodyRichTextBox, 0, 0)
 
     $rightLayout.Controls.Add($layout)
 
     $script:responseStatusLabel = $responseStatusLabel
     $script:responseHeaderDataGridView = $responseHeaderDataGridView
-    $script:responseBodyTextBox = $responseBodyTextBox
+    $script:responseBodyRichTextBox = $responseBodyRichTextBox
 }
 
 function InitRightBottomView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) {
@@ -479,6 +496,10 @@ function InitInteraction() {
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
         onRequestBodyContentTypeFormDataClick $object $e
     })
+    $script:requestBodyContentTypeOther.add_click({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        onRequestBodyContentTypeOtherClick $object $e
+    })
 
     $script:cryptoButton.add_click({
         param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
@@ -531,6 +552,74 @@ function onAddButtonClick(
 function onSendButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+    $requestMethodValue = GenerateRequestMethod
+    $requestMethodSuccess = $requestMethodValue[0]
+    $reqMethod = $requestMethodValue[1]
+    if ($requestMethodSuccess -ne $true) {
+        return
+    }
+
+    $requestUrlValue = GenerateRequestUrl
+    $requestUrlSuccess = $requestUrlValue[0]
+    $requestUrl = $requestUrlValue[1]
+    if ($requestUrlSuccess -ne $true) {
+        return
+    }
+
+    $requestHeadersValue = GenerateRequestHeader
+    $requestHeadersSuccess = $requestHeadersValue[0]
+    $requestHeaders = $requestHeadersValue[1]
+    $requestContentType = $requestHeadersValue[2]
+    if ($requestHeadersSuccess -ne $true) {
+        return
+    }
+
+    $requestBody = $null
+    if ($reqMethod -eq 'POST' -or $reqMethod -eq 'PUT') {
+        $requestBodyValue = GenerateRequestBody
+        $requestBodySuccess = $requestBodyValue[0]
+        $requestBody = $requestBodyValue[1]
+        if ($requestBodySuccess -ne $true) {
+            return
+        }
+    }
+
+
+    $script:responseStatusLabel.Text = '回應狀態: 請求中'
+    $script:responseBodyRichTextBox.Text = ''
+    for ($i = 0; $i -lt $script:responseHeaderDataGridView.Rows.Count - 1; $i++) {
+        $script:responseHeaderDataGridView.Rows.RemoveAt(0)
+    }
+
+
+    $responseValue = (Request $reqMethod $requestUrl $requestContentType $requestHeaders $requestBody)
+    [bool]$responseSuccess = $responseValue[0]
+    [string]$responseMessage = $responseValue[1]
+    [int]$responseStatusCode = $responseValue[2]
+    [System.Collections.Generic.Dictionary[[string],[string]]]$responseHeaders = $responseValue[3]
+    [string]$responseBody = $responseValue[4]
+
+    if ($responseSuccess -ne $true) {
+        [System.Windows.Forms.MessageBox]::Show(
+            $responseMessage,
+            '錯誤',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+        return
+    }
+
+
+    [System.Windows.Forms.MessageBox]::Show(
+        "$responseMessage($responseStatusCode)",
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+
+    $script:responseBodyRichTextBox.Text = $responseBody
+    $script:responseStatusLabel.Text = "回應狀態: $responseStatusCode"
+    foreach ($key in $responseHeaders.Keys) {
+        $script:responseHeaderDataGridView.Rows.Add($key, $responseHeaders[$key])
+    }
 }
 
 function onMethodComboBoxChange(
@@ -569,7 +658,7 @@ function onRequestBodyContentTypeJsonClick(
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
 
-    $script:requestBodyLayout.Controls.Add($script:requestBodyJsonTextBox, 1, 0)
+    $script:requestBodyLayout.Controls.Add($script:requestBodyRichJsonTextBox, 1, 0)
 
     $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
 
@@ -588,7 +677,7 @@ function onRequestBodyContentTypeXmlClick(
     $script:requestBodyLayout.Controls.Clear()
     $script:requestBodyLayout.Controls.Add($group, 0, 0)
 
-    $script:requestBodyLayout.Controls.Add($script:requestBodyXmlTextBox, 1, 0)
+    $script:requestBodyLayout.Controls.Add($script:requestBodyXmlRichTextBox, 1, 0)
 
     $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
 
@@ -617,6 +706,25 @@ function onRequestBodyContentTypeFormDataClick(
     }
 
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'multipart/form-data')
+}
+
+function onRequestBodyContentTypeOtherClick(
+    [System.Windows.Forms.RadioButton]$object,
+    [System.EventArgs]$e) {
+    $group = $script:requestBodyLayout.Controls[0]
+    $script:requestBodyLayout.Controls.Clear()
+    $script:requestBodyLayout.Controls.Add($group, 0, 0)
+
+    $script:requestBodyLayout.Controls.Add($script:requestBodyOtherRichTextBox, 1, 0)
+
+    $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+
+    if ($index -ne -1) {
+        $script:requestHeaderDataGridView.Rows[$index].Cells[1].Value = ''
+        return
+    }
+
+    $script:requestHeaderDataGridView.Rows.Add('Content-Type', '')
 }
 
 function onCryptoButtonClick(
@@ -694,6 +802,263 @@ function onRequestBodyFormDataDataGridViewCellContentClick(
         $textCell.Value = $dialog.FileName
         $typeCell.Value = $object.Columns[1].Items[0]
     }
+}
+
+function GenerateRequestMethod() {
+    $method = $script:methodComboBox.SelectedItem
+    return @($true, $method)
+}
+
+function GenerateRequestUrl() {
+    $url = $script:urlTextBox.Text
+    if ($url -eq '') {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請填寫請求網址',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+        return @($false, $null)
+    }
+
+    if (-not $url.ToLower().StartsWith('http:') -and
+        -not $url.ToLower().StartsWith('https:')) {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請確認請求網址是否為HTTP/HTTPS請求',
+        '錯誤',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+        return @($false, $null)
+    }
+
+    return @($true, $url)
+}
+
+function GenerateRequestHeader() {
+    $headerCount = $script:requestHeaderDataGridView.Rows.Count
+    if ($headerCount -le 0) {
+        return @($true, $null, $null)
+    }
+
+    $headers = New-Object System.Collections.Generic.Dictionary'[String,String]'
+    $contentType = $null
+
+    for ($i = 0; $i -lt $headerCount; $i++) {
+        $row = $script:requestHeaderDataGridView.Rows[$i]
+
+        $header = $row.Cells[0]
+        if ($null -eq $header) {
+            continue
+        }
+
+        $value = $row.Cells[1]
+        if ($null -eq $value) {
+            continue
+        }
+
+        $headerValue = $header.Value
+        if ($null -eq $headerValue) {
+            continue
+        }
+
+        if ($headerValue -eq '') {
+            [System.Windows.Forms.MessageBox]::Show(
+            '請確認請求標頭內容填寫完整，發現未填寫的標頭鍵值',
+            '提示',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+            return @($false, $null, $null)
+        }
+
+        $valueValue = $value.Value
+        if ($null -eq $valueValue) {
+            continue
+        }
+
+        if ($valueValue -eq '') {
+            [System.Windows.Forms.MessageBox]::Show(
+            '請確認請求標頭內容填寫完整，發現未填寫的標頭值',
+            '提示',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+            return @($false, $null, $null)
+        }
+
+        if ($headers.ContainsKey($headerValue) -or
+            ($null -ne $contentType -and $headerValue.ToLower() -eq 'content-type')) {
+            [System.Windows.Forms.MessageBox]::Show(
+            '請確認請求標頭內容，包含重複請求標頭鍵值',
+            '錯誤',
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+            return @($false, $null, $null)
+        }
+
+        if ($headerValue.ToLower() -eq 'content-type') {
+            $contentType = $valueValue
+            continue
+        }
+
+        $headers.Add($headerValue, $valueValue)
+    }
+
+    return @($true, $headers, $contentType)
+}
+
+function GenerateRequestBody () {
+    if ($script:requestBodyContentTypeJson.Checked) {
+        return GenerateRequestJsonBody
+    }
+
+    if ($script:requestBodyContentTypeXml.Checked) {
+        return GenerateRequestXmlBody
+    }
+
+    if ($script:requestBodyContentTypeFormData.Checked) {
+        return GenerateRequestFormDataBody
+    }
+
+    if ($script:requestBodyContentTypeOther.Checked) {
+        return GenerateRequestOtherBody
+    }
+
+    return ($true, $null)
+}
+
+function GenerateRequestJsonBody() {
+    $body = $script:requestBodyRichJsonTextBox.Text
+    if ($body -eq '') {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請輸入請求體 JSON 字串內容',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+        return @($false, $null)
+    }
+
+    try {
+        ConvertFrom-Json $body
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請確認請求體 JSON 字串內容格式正確',
+        '錯誤',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Error)  | Out-Null
+        return @($false, $null)
+    }
+    return @($true, $body)
+}
+
+function GenerateRequestXmlBody() {
+    $body = $script:requestBodyXmlRichTextBox.Text
+    if ($body -eq '') {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請輸入請求體 XML 字串內容',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+        return @($false, $null)
+    }
+
+    try {
+        [xml]$body
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請確認請求體 XML 字串內容格式正確',
+        '錯誤',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+        return @($false, $null)
+    }
+    return @($true, $body)
+}
+
+function GenerateRequestFormDataBody() {
+    $body = New-Object System.Collections.Generic.Dictionary'[String,object]'
+
+    $dataGridView = $script:requestBodyFormDataDataGridView
+    $rows = $dataGridView.Rows
+    $rowCount = $rows.Count
+    for ($i = 0; $i -lt $rowCount; $i++) {
+        $row = $rows[$i]
+
+        $nameCell = $row.Cells[0]
+        if ($null -eq $nameCell) {
+            continue
+        }
+        $nameValue = $nameCell.Value
+
+        $typeCell = $row.Cells[1]
+        if ($null -eq $typeCell) {
+            continue
+        }
+        $typeValue = $typeCell.Value
+
+        $textCell = $row.Cells[3]
+        if ($null -eq $textCell) {
+            continue
+        }
+        $textValue = $textCell.Value
+
+        if (($nameValue -eq '' -or $null -eq $nameValue) -and
+            ($typeValue -eq '' -or $null -eq $typeValue) -and
+            ($textValue -eq '' -or $null -eq $textValue)) {
+            continue
+        }
+
+        if ($nameValue -eq '' -or
+            $typeValue -eq '' -or
+            $textValue -eq '' -or
+            $null -eq $nameValue -or
+            $null -eq $typeValue -or
+            $null -eq $textValue) {
+            [System.Windows.Forms.MessageBox]::Show(
+                '請輸入確認請求體內容填寫完整，發現表單中發現空值',
+                '提示',
+                [System.Windows.Forms.MessageBoxButtons]::OK,
+                [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+            return @($false, $null)
+        }
+
+        if ($typeValue -eq $dataGridView.Columns[1].Items[0] -and
+            -not (Test-Path -Path $textValue)) {
+            [System.Windows.Forms.MessageBox]::Show(
+                '請輸入確認所有指定檔案皆存在',
+                '錯誤',
+                [System.Windows.Forms.MessageBoxButtons]::OK,
+                [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+            return @($false, $null)
+        }
+
+        if ($body.ContainsKey($nameValue)) {
+            [System.Windows.Forms.MessageBox]::Show(
+                '請確認請求體內容填寫正確，發現重複鍵值',
+                '錯誤',
+                [System.Windows.Forms.MessageBoxButtons]::OK,
+                [System.Windows.Forms.MessageBoxIcon]::Error) | Out-Null
+            return @($false, $null)
+        }
+
+        if ($typeValue -eq $dataGridView.Columns[1].Items[0]) {
+            $body.Add($nameValue, [IO.File]::ReadAllText($textValue))
+        } else {
+            $body.Add($nameValue, $textValue)
+        }
+    }
+
+    return @($true, $body)
+}
+
+function GenerateRequestOtherBody() {
+    $body = $script:requestBodyOtherRichTextBox.Text
+    if ($body -eq '') {
+        [System.Windows.Forms.MessageBox]::Show(
+        '請輸入請求體字串內容',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OK,
+        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+        return @($false, $null)
+    }
+    return @($true, $body)
 }
 
 function FindIndexInDataGridView (
