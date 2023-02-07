@@ -71,7 +71,7 @@ function Request(
                 WriteRecord $requestMethod $requestUrl $requestContentType $requestHeaders $requestBody $null $null $null
             }
 
-            return @($false, "發生異常: {$_.Exception.Message}", $null, $null, $null)
+            return @($false, "發生異常: $($_.Exception.Message)", $null, $null, $null)
         }
 
         [System.Net.WebResponse]$response = $_.Exception.Response
@@ -104,7 +104,7 @@ function Request(
             WriteRecord $requestMethod $requestUrl $requestContentType $requestHeaders $requestBody $null $null $null
         }
 
-        return @($false, "發生未知異常: {$_.Exception.Message}", $null, $null, $null)
+        return @($false, "發生未知異常: $($_.Exception.Message)", $null, $null, $null)
     }
 }
 
