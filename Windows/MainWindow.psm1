@@ -473,6 +473,10 @@ function InitInteraction() {
         param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
         onAddButtonClick $object $e
     })
+    $script:dataListBox.add_mouseDoubleClick({
+        param([System.Windows.Forms.ListBox]$object, [System.Windows.Forms.MouseEventArgs]$e)
+        onDataListBoxMouseDoubleClick $object $e
+    })
 
     $script:methodComboBox.add_SelectedIndexChanged({
         param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
@@ -483,25 +487,25 @@ function InitInteraction() {
         onSendButtonClick $object $e
     })
 
-    $script:requestBodyContentTypeNone.add_click({
+    $script:requestBodyContentTypeNone.add_CheckedChanged({
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
-        onRequestBodyContentTypeNoneClick $object $e
+        onRequestBodyContentTypeNoneCheck $object $e
     })
-    $script:requestBodyContentTypeJson.add_click({
+    $script:requestBodyContentTypeJson.add_CheckedChanged({
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
-        onRequestBodyContentTypeJsonClick $object $e
+        onRequestBodyContentTypeJsonCheck $object $e
     })
-    $script:requestBodyContentTypeXml.add_click({
+    $script:requestBodyContentTypeXml.add_CheckedChanged({
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
-        onRequestBodyContentTypeXmlClick $object $e
+        onRequestBodyContentTypeXmlCheck $object $e
     })
-    $script:requestBodyContentTypeFormData.add_click({
+    $script:requestBodyContentTypeFormData.add_CheckedChanged({
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
-        onRequestBodyContentTypeFormDataClick $object $e
+        onRequestBodyContentTypeFormDataCheck $object $e
     })
-    $script:requestBodyContentTypeOther.add_click({
+    $script:requestBodyContentTypeOther.add_CheckedChanged({
         param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
-        onRequestBodyContentTypeOtherClick $object $e
+        onRequestBodyContentTypeOtherCheck $object $e
     })
 
     $script:cryptoButton.add_click({
@@ -546,18 +550,33 @@ function onImportButtonClick(
     }
 
     $filepath = $dialog.FileName
-    ReadData $filepath
+    ReadAllData $filepath
     LoadData
 }
 
 function onExportButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    $dialog = New-Object System.Windows.Forms.SaveFileDialog
+    $dialog.filter = "JSON檔案 (*.json)| *.json"
+    $result = $dialog.ShowDialog()
+
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        return
+    }
+
+    $filepath = $dialog.FileName
+    WriteAllData $filepath
 }
 
 function onRemoveButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    $name = $script:dataListBox.SelectedItem
+    RemoveTargetData $name
+    $script:dataListBox.Items.Remove($name)
 }
 
 function onAddButtonClick(
@@ -651,7 +670,7 @@ function onMethodComboBoxChange(
     }
 }
 
-function onRequestBodyContentTypeNoneClick(
+function onRequestBodyContentTypeNoneCheck(
     [System.Windows.Forms.RadioButton]$object,
     [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
@@ -667,7 +686,7 @@ function onRequestBodyContentTypeNoneClick(
     $script:requestHeaderDataGridView.Rows.RemoveAt($index)
 }
 
-function onRequestBodyContentTypeJsonClick(
+function onRequestBodyContentTypeJsonCheck(
     [System.Windows.Forms.RadioButton]$object,
     [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
@@ -686,7 +705,7 @@ function onRequestBodyContentTypeJsonClick(
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/json')
 }
 
-function onRequestBodyContentTypeXmlClick(
+function onRequestBodyContentTypeXmlCheck(
     [System.Windows.Forms.RadioButton]$object,
     [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
@@ -705,7 +724,7 @@ function onRequestBodyContentTypeXmlClick(
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'application/xml')
 }
 
-function onRequestBodyContentTypeFormDataClick(
+function onRequestBodyContentTypeFormDataCheck(
     [System.Windows.Forms.RadioButton]$object,
     [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
@@ -724,7 +743,7 @@ function onRequestBodyContentTypeFormDataClick(
     $script:requestHeaderDataGridView.Rows.Add('Content-Type', 'multipart/form-data')
 }
 
-function onRequestBodyContentTypeOtherClick(
+function onRequestBodyContentTypeOtherCheck(
     [System.Windows.Forms.RadioButton]$object,
     [System.EventArgs]$e) {
     $group = $script:requestBodyLayout.Controls[0]
@@ -833,13 +852,102 @@ function onRequestBodyFormDataDataGridViewCellContentClick(
     }
 }
 
+function onDataListBoxMouseDoubleClick(
+    [System.Windows.Forms.ListBox]$object,
+    [System.Windows.Forms.MouseEventArgs]$e) {
+
+    $result = [System.Windows.Forms.MessageBox]::Show(
+        '請確認載入選擇的資料',
+        '提示',
+        [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+        [System.Windows.Forms.MessageBoxIcon]::Information)
+
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        return
+    }
+
+    $index = $object.IndexFromPoint($e.Location)
+    $item = $object.Items[$index]
+
+    $data = (LoadTargetData $item)
+
+    $success = $data[0]
+    if (-not $success) {
+        return
+    }
+
+    [string]$method = $data[1]
+    [string]$url = $data[2]
+    [System.Collections.Generic.Dictionary[[string],[string]]]$headers = $data[3]
+    [string]$contentType = $data[4]
+    $body = $data[5]
+
+    $script:methodComboBox.SelectedItem = $method
+    $script:urlTextBox.Text = $url;
+
+    $script:requestHeaderDataGridView.Rows.Clear()
+    if ($null -ne $headers) {
+        foreach ($key in $headers.Keys) {
+            $value = $headers[$key]
+            $script:requestHeaderDataGridView.Rows.Add($key, $value)
+        }
+    }
+
+    if ($null -ne $contentType) {
+        $index = (FindIndexInDataGridView $script:requestHeaderDataGridView 'content-type' 0)
+        if ($index -ne -1) {
+            $script:requestHeaderDataGridView.Rows[$index].Cells[1].Value = $contentType
+        } else {
+            $script:requestHeaderDataGridView.Rows.Add('Content-Type', $contentType)
+        }
+    }
+
+
+    $script:requestBodyContentTypeNone.Checked = $true
+    $script:requestBodyContentTypeXml.Checked = $false
+    $script:requestBodyContentTypeJson.Checked = $false
+    $script:requestBodyContentTypeFormData.Checked = $false
+    $script:requestBodyContentTypeOther.Checked = $false
+
+    if ($null -ne $body) {
+
+        if ($body -is [string] -and $contentType -eq 'application/json') {
+            $script:requestBodyContentTypeJson.Checked = $true
+            $script:requestBodyRichJsonTextBox.Text = $body
+        } elseif ($body -is [string] -and $contentType -eq 'application/xml') {
+            $script:requestBodyContentTypeXml.Checked = $true
+            $script:requestBodyXmlRichTextBox.Text = $body
+        } elseif ($body -is [System.Collections.Generic.List[object]] -and $contentType -eq 'multipart/form-data') {
+            $script:requestBodyContentTypeFormData.Checked = $true
+            $script:requestBodyFormDataDataGridView.Rows.Clear()
+            foreach ($item in $body) {
+                if ($item.type -ne 'text' -and $item.type -ne 'file') {
+                    continue
+                }
+
+                $requestBodyFormDataDataGridView.Rows.Add()
+                $index = $requestBodyFormDataDataGridView.Rows.RowCount - 2
+                $requestBodyFormDataDataGridView.Rows[$index].Cells[0].Value = $item.name
+                $requestBodyFormDataDataGridView.Rows[$index].Cells[1].Value = $item.text
+                $requestBodyFormDataDataGridView.Rows[$index].Cells[2].Value = '選擇檔案'
+                $requestBodyFormDataDataGridView.Rows[$index].Cells[3].Value = $item.type
+
+            }
+
+        } elseif ($body -is [string]) {
+            $script:requestBodyContentTypeOther.Checked = $true
+            $script:requestBodyOtherRichTextBox.Text = $body
+        }
+    }
+}
+
 function LoadData() {
-    $allData = GetData
+    $allData = GetAllData
 
     $script:dataListBox.BeginUpdate()
+    $script:dataListBox.Items.Clear()
     foreach ($data in $allData) {
         $name = $data.name
-        $script:dataListBox.Items.Clear()
         $script:dataListBox.Items.Add($name)
     }
     $script:dataListBox.EndUpdate()

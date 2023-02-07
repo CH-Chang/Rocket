@@ -1,6 +1,6 @@
 ﻿$script:data = $null
 
-function ReadData([string]$filepath) {
+function ReadAllData([string]$filepath) {
     $data = $null
     try {
         $data = (Get-Content -Path $filepath | ConvertFrom-Json)
@@ -86,9 +86,50 @@ function ReadData([string]$filepath) {
                 }
 
                 if ((-not ($record.body.content -is [string])) -and
-                    (-not ($record.body.content -is [System.Management.Automation.PSCustomObject]))) {
+                    (-not ($record.body.content -is [array]))) {
                     $invalid = $true
                     break
+                }
+
+                if ($record.body.content -is [array]) {
+                    foreach ($iData in $record.body.content) {
+                        $properties = Get-Member -InputObject $iData -MemberType Properties -Name 'name'
+                        if ($null -eq $properties) {
+                            $invalid = $true
+                            break
+                        }
+
+                        if (-not ($iData.name -is [string])) {
+                            $invalid = $true
+                            break
+                        }
+
+                        $properties = Get-Member -InputObject $iData -MemberType Properties -Name 'type'
+                        if ($null -eq $properties) {
+                            $invalid = $true
+                            break
+                        }
+
+                        if (-not ($iData.type -is [string])) {
+                            $invalid = $true
+                            break
+                        }
+
+                        $properties = Get-Member -InputObject $iData -MemberType Properties -Name 'text'
+                        if ($null -eq $properties) {
+                            $invalid = $true
+                            break
+                        }
+
+                        if (-not ($iData.text -is [string])) {
+                            $invalid = $true
+                            break
+                        }
+                    }
+
+                    if ($invalid) {
+                        break
+                    }
                 }
             }
         }
@@ -106,18 +147,67 @@ function ReadData([string]$filepath) {
     $script:data = $data
 }
 
-function WriteData() {
-
+function WriteAllData([string]$filepath) {
+    $content = $script:data | Select-Object -Property * | ConvertTo-Json
+    $content | Out-File -FilePath $filepath -Encoding utf8 -Force
 }
 
-function SaveData() {
-
-}
-
-function GetData() {
+function GetAllData() {
     return $script:data
 }
 
-function LoadData([string]$name) {
+function RemoveTargetData([string]$target) {
+    $script:data = $script:data | Where-Object { $_.name -ne $target }
+}
 
+function SaveTargetData() {
+
+}
+
+function LoadTargetData([string]$target) {
+    for ($i=0; $i -lt $script:data.Length; $i++) {
+        $data = $script:data[$i]
+
+        $name = $data.name
+        if ($target -ne $name) {
+            continue
+        }
+
+        $method = $data.method
+        $url = $data.url
+
+        $headers = $null
+        if ($null -ne $data.headers) {
+            $headers = New-Object System.Collections.Generic.Dictionary'[String,String]'
+            $keys = ($data.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name)
+            for ($j=0; $j -lt $keys.Length; $j++) {
+                $key = $keys[$j]
+                $value = $data.headers[$key]
+                $headers.Add($key, $value)
+            }
+        }
+
+        $contentType = $null
+        $body = $null
+        if ($null -ne $data.body) {
+            $contentType = $data.body.type
+
+            if ($data.body.content -is [string]) {
+                $body = $data.body.content
+            } elseif ($data.body.content -is [array]) {
+                $body = New-Object System.Collections.Generic.List[object]
+                foreach ($contentItem in $data.body.content) {
+                    $row = New-Object System.Collections.Generic.Dictionary'[String,String]'
+                    $row.Add('type', $contentItem.type)
+                    $row.Add('name', $contentItem.name)
+                    $row.Add('text', $contentItem.text)
+                    $body.Add($row)
+                }
+            }
+        }
+
+        return @($true, $method, $url, $headers, $contentType, $body)
+    }
+
+    return @($false, $null, $null, $null, $null, $null)
 }
