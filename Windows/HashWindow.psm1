@@ -100,6 +100,7 @@ function InitOperationView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $keyTextBox.Dock = 'Fill'
     $keyTextBox.Font = '微軟正黑體,10pt'
     $keyTextBox.Multiline = $false
+    $keyTextBox.Enabled = $false
     $keyLayout.Controls.Add($keyTextBox, 1, 0)
 
     $doLayout = New-Object System.Windows.Forms.TableLayoutPanel
@@ -206,6 +207,11 @@ function InitInteraction() {
         param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
         OnTypeComboBoxChange $object $e
     })
+
+    $script:algorithmComboBox.add_SelectedIndexChanged({
+        param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
+        OnAlgorithmComboBoxChange $object $e
+    })
 }
 
 function OnHashButtonClick(
@@ -225,6 +231,19 @@ function OnTypeComboBoxChange(
     } else {
         $script:plaintextRichTextBox.Enabled = $true
         $script:ciphertextRichTextBox.Enabled = $true
+    }
+}
+
+function OnAlgorithmComboBoxChange(
+    [System.Windows.Forms.ComboBox]$object,
+    [System.EventArgs]$e) {
+    $algorithm = $script:algorithmComboBox.SelectedItem
+
+    if ($algorithm -eq 'HMAC SHA256') {
+        $script:keyTextBox.Enabled = $true
+    } else {
+        $script:keyTextBox.Text = ''
+        $script:keyTextBox.Enabled = $false
     }
 }
 

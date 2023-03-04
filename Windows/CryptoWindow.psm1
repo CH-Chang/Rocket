@@ -110,8 +110,8 @@ function InitOperationView([System.Windows.Forms.TableLayoutPanel]$layout) {
 
     $paddingComboBox = New-Object System.Windows.Forms.ComboBox
     $paddingComboBox.Items.Add('No Padding')
-    $paddingComboBox.Items.Add('Zero Padding')
-    $paddingComboBox.Items.Add('PKCS#7 Padding')
+    $paddingComboBox.Items.Add('PKCS#1 Padding')
+    $paddingComboBox.Items.Add('PKCS#1 OAEP Padding')
     $paddingComboBox.SelectedIndex= 0
     $paddingComboBox.Font = '微軟正黑體,10pt,style=Bold'
     $paddingComboBox.Dock = 'Fill'
@@ -320,6 +320,71 @@ function OnTypeComboBoxChange(
 function OnAlgorithmComboBoxChange(
     [System.Windows.Forms.ComboBox]$object,
     [System.EventArgs]$e) {
+    $algorithm = $script:algorithmComboBox.SelectedItem
+
+    $script:paddingComboBox.Items.Clear()
+    if ($algorithm -eq 'RSA 1024') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 OAEP Padding')
+    } elseif ($algorithm -eq 'RSA 2048') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 OAEP Padding')
+    } elseif ($algorithm -eq 'AES 256 ECB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 256 CBC') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 256 CFB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 256 OFB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 256 CTR') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 128 ECB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 128 CBC') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 128 CFB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 128 OFB') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    } elseif ($algorithm -eq 'AES 128 CTR') {
+        $script:paddingComboBox.Items.Add('No Padding')
+        $script:paddingComboBox.Items.Add('Zero Padding')
+        $script:paddingComboBox.Items.Add('PKCS#1 Padding')
+    }
+
+    if ($algorithm -eq 'RSA 1024') {
+        $script:ivTextBox.Text = ''
+        $script:ivTextBox.Enabled = $false
+    } elseif ($algorithm -eq 'RSA 2048') {
+        $script:ivTextBox.Text = ''
+        $script:ivTextBox.Enabled = $false
+    } elseif ($algorithm -eq 'AES 128 ECB') {
+        $script:ivTextBox.Text = ''
+        $script:ivTextBox.Enabled = $false
+    } else {
+        $script:ivTextBox.Enabled = $true
+    }
 }
 
 function RunUI() {
