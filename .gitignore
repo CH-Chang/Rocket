@@ -3,3 +3,6 @@ Records
 
 # For testing data json
 *.json
+
+# For release
+Output
