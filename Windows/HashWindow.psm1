@@ -1,4 +1,15 @@
-﻿function Init() {
+﻿[System.Windows.Forms.Form]$script:window = $null
+
+[System.Windows.Forms.Button]$script:hashButton = $null
+
+[System.Windows.Forms.ComboBox]$script:typeComboBox = $null
+[System.Windows.Forms.ComboBox]$script:algorithmComboBox = $null
+[System.Windows.Forms.TextBox]$script:keyTextBox = $null
+
+[System.Windows.Forms.RichTextBox]$script:plaintextRichTextBox = $null
+[System.Windows.Forms.RichTextBox]$script:ciphertextRichTextBox = $null
+
+function Init() {
     InitDenp
     InitView
     InitInteraction
@@ -105,6 +116,11 @@ function InitOperationView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $hashButton.Font = '微軟正黑體,10pt'
     $hashButton.Dock = 'Fill'
     $doLayout.Controls.Add($hashButton, 0, 0)
+
+    $script:typeComboBox = $typeComboBox
+    $script:algorithmComboBox = $algorithmComboBox
+    $script:keyTextBox = $keyTextBox
+    $script:hashButton = $hashButton
 }
 
 function InitPlaintextView([System.Windows.Forms.TableLayoutPanel]$layout) {
@@ -127,6 +143,8 @@ function InitPlaintextView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $plaintextRichTextBox.Multiline = $true
     $plaintextRichTextBox.Font = '微軟正黑體,10pt'
     $plaintextLayout.Controls.Add($plaintextRichTextBox, 0, 1)
+
+    $script:plaintextRichTextBox = $plaintextRichTextBox
 }
 
 function InitCiphertextView([System.Windows.Forms.TableLayoutPanel]$layout) {
@@ -149,6 +167,8 @@ function InitCiphertextView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $ciphertextRichTextBox.Multiline = $true
     $ciphertextRichTextBox.Font = '微軟正黑體,10pt'
     $ciphertextLayout.Controls.Add($ciphertextRichTextBox, 0, 1)
+
+    $script:ciphertextRichTextBox = $ciphertextRichTextBox
 }
 
 function InitView() {

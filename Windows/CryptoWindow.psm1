@@ -3,6 +3,12 @@
 [System.Windows.Forms.Button]$script:encryptButton = $null
 [System.Windows.Forms.Button]$script:decryptButton = $null
 
+[System.Windows.Forms.ComboBox]$script:typeComboBox = $null
+[System.Windows.Forms.ComboBox]$script:algorithmComboBox = $null
+[System.Windows.Forms.ComboBox]$script:paddingComboBox = $null
+[System.Windows.Forms.TextBox]$script:keyTextBox = $null
+[System.Windows.Forms.TextBox]$script:ivTextBox = $null
+
 [System.Windows.Forms.RichTextBox]$script:plaintextRichTextBox = $null
 [System.Windows.Forms.RichTextBox]$script:ciphertextRichTextBox = $null
 
@@ -178,6 +184,14 @@ function InitOperationView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $decryptButton.Font = '微軟正黑體,10pt'
     $decryptButton.Dock = 'Fill'
     $doLayout.Controls.Add($decryptButton, 1, 0)
+
+    $script:encryptButton = $encryptButton
+    $script:decryptButton = $decryptButton
+    $script:typeComboBox = $typeComboBox
+    $script:algorithmComboBox = $algorithmComboBox
+    $script:paddingComboBox = $paddingComboBox
+    $script:keyTextBox = $keyTextBox
+    $script:ivTextBox = $ivTextBox
 }
 
 function InitPlaintextView([System.Windows.Forms.TableLayoutPanel]$layout) {
@@ -200,6 +214,8 @@ function InitPlaintextView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $plaintextRichTextBox.Multiline = $true
     $plaintextRichTextBox.Font = '微軟正黑體,10pt'
     $plaintextLayout.Controls.Add($plaintextRichTextBox, 0, 1)
+
+    $script:plaintextRichTextBox = $plaintextRichTextBox
 }
 
 function InitCiphertextView([System.Windows.Forms.TableLayoutPanel]$layout) {
@@ -222,6 +238,8 @@ function InitCiphertextView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $ciphertextRichTextBox.Multiline = $true
     $ciphertextRichTextBox.Font = '微軟正黑體,10pt'
     $ciphertextLayout.Controls.Add($ciphertextRichTextBox, 0, 1)
+
+    $script:ciphertextRichTextBox = $ciphertextRichTextBox
 }
 
 function InitView() {
