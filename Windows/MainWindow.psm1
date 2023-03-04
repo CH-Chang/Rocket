@@ -2,6 +2,7 @@
 Import-Module '.\Utils\Settings.psm1'
 Import-Module '.\Utils\Data.psm1'
 Import-Module '.\Windows\SettingWindow.psm1'
+Import-Module '.\Windows\AddDialogWindow.psm1'
 
 [System.Windows.Forms.Form]$script:window = $null
 
@@ -582,6 +583,57 @@ function onRemoveButtonClick(
 function onAddButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
+
+    $methodValue = GenerateRequestMethod
+    $methodSuccess = $methodValue[0]
+    $method = $methodValue[1]
+    if ($methodSuccess -ne $true) {
+        return
+    }
+
+    $urlValue = GenerateRequestUrl
+    $urlSuccess = $urlValue[0]
+    $url = $urlValue[1]
+    if ($urlSuccess -ne $true) {
+        return
+    }
+
+    $headerValue = GenerateRequestHeader
+    $headerSuccess = $headerValue[0]
+    $header = $headerValue[1]
+    $contentType = $headerValue[2]
+    if ($headerSuccess -ne $true) {
+        return
+    }
+
+    $body = $null
+    if ($reqMethod -eq 'POST' -or $reqMethod -eq 'PUT') {
+        $bodyValue = GenerateRequestBody
+        $bodySuccess = $bodyValue[0]
+        $body = $bodyValue[1]
+        if ($bodySuccess -ne $true) {
+            return
+        }
+    }
+
+    $result = RunAddDialog
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        return
+    }
+
+    $name = GetAddName
+
+    SaveTargetData $name $method $url $header $contentType $body
+
+    $allData = GetAllData
+
+    $script:dataListBox.BeginUpdate()
+    $script:dataListBox.Items.Clear()
+    foreach ($data in $allData) {
+        $name = $data.name
+        $script:dataListBox.Items.Add($name)
+    }
+    $script:dataListBox.EndUpdate()
 }
 
 function onSendButtonClick(
@@ -635,6 +687,7 @@ function onSendButtonClick(
     [string]$responseBody = $responseValue[4]
 
     if ($responseSuccess -ne $true) {
+        $script:responseStatusLabel.Text = '回應狀態: 請求失敗'
         [System.Windows.Forms.MessageBox]::Show(
             $responseMessage,
             '錯誤',

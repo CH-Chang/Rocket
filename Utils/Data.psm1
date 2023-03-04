@@ -148,7 +148,16 @@ function ReadAllData([string]$filepath) {
 }
 
 function WriteAllData([string]$filepath) {
-    $content = $script:data | Select-Object -Property * | ConvertTo-Json
+    $object = $script:data | Select-Object -Property *
+
+    $content = $null
+    if ($object -is [System.Management.Automation.PSCustomObject]) {
+        $content =  ConvertTo-Json -InputObject @($object)
+    } else {
+        $content = $object | ConvertTo-Json
+    }
+
+
     $content | Out-File -FilePath $filepath -Encoding utf8 -Force
 }
 
@@ -160,8 +169,30 @@ function RemoveTargetData([string]$target) {
     $script:data = $script:data | Where-Object { $_.name -ne $target }
 }
 
-function SaveTargetData() {
+function SaveTargetData(
+    [string]$name,
+    [string]$method,
+    [string]$url,
+    [System.Collections.Generic.Dictionary[[string],[string]]]$headers,
+    [string]$contentType,
+    $body) {
 
+    if ($null -eq $script:data) {
+        $script:data = @()
+    }
+
+    $targetData = [PSCustomObject]@{
+        name = $name
+        method = $method
+        url = $url
+        headers = [hashtable]$headers
+        body = @{
+            type = $contentType
+            content = [hashtable]$body
+        }
+    }
+
+    $script:data = $script:data + @($targetData)
 }
 
 function LoadTargetData([string]$target) {
