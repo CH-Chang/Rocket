@@ -268,6 +268,49 @@ function InitView() {
 }
 
 function InitInteraction() {
+    $script:encryptButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        OnEncryptButtonClick $object $e
+    })
+
+    $script:decryptButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        OnDecryptButtonClick $object $e
+    })
+
+    $script:typeComboBox.add_SelectedIndexChanged({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        OnTypeComboBoxChange $object $e
+    })
+
+    $script:algorithmComboBox.add_SelectedIndexChanged({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        OnAlgorithmComboBoxChange $object $e
+    })
+}
+
+function OnEncryptButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e
+) {
+
+}
+
+function OnDecryptButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e
+) {
+    $script:window.Close()
+}
+
+function OnTypeComboBoxChange(
+    [System.Windows.Forms.ComboBox]$object,
+    [System.EventArgs]$e) {
+}
+
+function OnAlgorithmComboBoxChange(
+    [System.Windows.Forms.ComboBox]$object,
+    [System.EventArgs]$e) {
 }
 
 function RunUI() {

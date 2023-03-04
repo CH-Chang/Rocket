@@ -197,6 +197,27 @@ function InitView() {
 }
 
 function InitInteraction() {
+    $script:hashButton.add_click({
+        param([System.Windows.Forms.Button]$object, [System.EventArgs]$e)
+        OnHashButtonClick $object $e
+    })
+
+    $script:typeComboBox.add_SelectedIndexChanged({
+        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        OnTypeComboBoxChange $object $e
+    })
+}
+
+function OnHashButtonClick(
+    [System.Windows.Forms.Button]$object,
+    [System.EventArgs]$e
+) {
+    $script:window.Close()
+}
+
+function OnTypeComboBoxChange(
+    [System.Windows.Forms.ComboBox]$object,
+    [System.EventArgs]$e) {
 }
 
 function RunUI() {
