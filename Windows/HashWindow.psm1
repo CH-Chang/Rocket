@@ -203,7 +203,7 @@ function InitInteraction() {
     })
 
     $script:typeComboBox.add_SelectedIndexChanged({
-        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
         OnTypeComboBoxChange $object $e
     })
 }
@@ -212,12 +212,20 @@ function OnHashButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e
 ) {
-    $script:window.Close()
 }
 
 function OnTypeComboBoxChange(
     [System.Windows.Forms.ComboBox]$object,
     [System.EventArgs]$e) {
+    $type = $script:typeComboBox.SelectedItem
+
+    if ($type -eq '檔案') {
+        $script:plaintextRichTextBox.Enabled = $false
+        $script:ciphertextRichTextBox.Enabled = $false
+    } else {
+        $script:plaintextRichTextBox.Enabled = $true
+        $script:ciphertextRichTextBox.Enabled = $true
+    }
 }
 
 function RunUI() {

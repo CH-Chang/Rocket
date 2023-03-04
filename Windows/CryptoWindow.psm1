@@ -160,6 +160,7 @@ function InitOperationView([System.Windows.Forms.TableLayoutPanel]$layout) {
     $ivTextBox = New-Object System.Windows.Forms.TextBox
     $ivTextBox.Dock = 'Fill'
     $ivTextBox.Font = '微軟正黑體,10pt'
+    $ivTextBox.Enabled = $false
     $ivTextBox.Multiline = $false
     $ivLayout.Controls.Add($ivTextBox, 1, 4)
 
@@ -279,12 +280,12 @@ function InitInteraction() {
     })
 
     $script:typeComboBox.add_SelectedIndexChanged({
-        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
         OnTypeComboBoxChange $object $e
     })
 
     $script:algorithmComboBox.add_SelectedIndexChanged({
-        param([System.Windows.Forms.RadioButton]$object, [System.EventArgs]$e)
+        param([System.Windows.Forms.ComboBox]$object, [System.EventArgs]$e)
         OnAlgorithmComboBoxChange $object $e
     })
 }
@@ -300,12 +301,20 @@ function OnDecryptButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e
 ) {
-    $script:window.Close()
 }
 
 function OnTypeComboBoxChange(
     [System.Windows.Forms.ComboBox]$object,
     [System.EventArgs]$e) {
+    $type = $script:typeComboBox.SelectedItem
+
+    if ($type -eq '檔案') {
+        $script:plaintextRichTextBox.Enabled = $false
+        $script:ciphertextRichTextBox.Enabled = $false
+    } else {
+        $script:plaintextRichTextBox.Enabled = $true
+        $script:ciphertextRichTextBox.Enabled = $true
+    }
 }
 
 function OnAlgorithmComboBoxChange(
@@ -315,7 +324,6 @@ function OnAlgorithmComboBoxChange(
 
 function RunUI() {
     $script:window.ShowDialog()
-
 }
 
 function RunCrypto() {
