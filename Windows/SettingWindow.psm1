@@ -48,6 +48,7 @@ function InitView() {
     $disableSSLLayout.RowCount = 1
     $disableSSLLayout.ColumnCount = 3
     $disableSSLLayout.AutoSize = $true
+    $disableSSLLayout.Dock = 'Fill'
     $disableSSLLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 40)))
     $disableSSLLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
     $disableSSLLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
@@ -78,6 +79,7 @@ function InitView() {
     $forceTls12Layout.RowCount = 1
     $forceTls12Layout.ColumnCount = 3
     $forceTls12Layout.AutoSize = $true
+    $forceTls12Layout.Dock = 'Fill'
     $forceTls12Layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 40)))
     $forceTls12Layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
     $forceTls12Layout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
@@ -107,6 +109,7 @@ function InitView() {
     $verifyJsonLayout.RowCount = 1
     $verifyJsonLayout.ColumnCount = 3
     $verifyJsonLayout.AutoSize = $true
+    $verifyJsonLayout.Dock = 'Fill'
     $verifyJsonLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 40)))
     $verifyJsonLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
     $verifyJsonLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
@@ -136,6 +139,7 @@ function InitView() {
     $verifyXmlLayout.RowCount = 1
     $verifyXmlLayout.ColumnCount = 3
     $verifyXmlLayout.AutoSize = $true
+    $verifyXmlLayout.Dock = 'Fill'
     $verifyXmlLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 40)))
     $verifyXmlLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
     $verifyXmlLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
@@ -165,6 +169,7 @@ function InitView() {
     $autoSaveLayout.RowCount = 1
     $autoSaveLayout.ColumnCount = 3
     $autoSaveLayout.AutoSize = $true
+    $autoSaveLayout.Dock = 'Fill'
     $autoSaveLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 40)))
     $autoSaveLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
     $autoSaveLayout.ColumnStyles.Add((new-object System.Windows.Forms.ColumnStyle([System.Windows.Forms.SizeType]::Percent, 30)))
