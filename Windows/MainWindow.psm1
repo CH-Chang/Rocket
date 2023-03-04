@@ -147,7 +147,7 @@ function InitRightTopView ([System.Windows.Forms.TableLayoutPanel]$rightLayout) 
     $urlTextBox.Dock = 'Fill'
     $urlTextBox.Font = '微軟正黑體,10pt'
     $urlTextBox.Multiline = $false
-    $urlTextBox.Text = 'http://localhost:3000'
+    $urlTextBox.Text = ''
     $layout.Controls.Add($urlTextBox, 1, 0)
 
     $sendButton = New-Object System.Windows.Forms.Button
