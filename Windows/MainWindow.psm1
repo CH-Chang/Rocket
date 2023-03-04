@@ -841,7 +841,7 @@ function onAboutButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
     $return = [System.Windows.Forms.MessageBox]::Show(
-        "版權所有© 2023 CHIH HSIANG CHANG",
+        "版權所有© 2023 CH CHANG",
         '關於程式',
         [System.Windows.Forms.MessageBoxButtons]::OKCancel,
         [System.Windows.Forms.MessageBoxIcon]::Information)
