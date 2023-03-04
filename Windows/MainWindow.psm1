@@ -3,6 +3,8 @@ Import-Module '.\Utils\Settings.psm1'
 Import-Module '.\Utils\Data.psm1'
 Import-Module '.\Windows\SettingWindow.psm1'
 Import-Module '.\Windows\AddDialogWindow.psm1'
+Import-Module '.\Windows\CryptoWindow.psm1'
+Import-Module '.\Windows\HashWindow.psm1'
 
 [System.Windows.Forms.Form]$script:window = $null
 
@@ -819,22 +821,14 @@ function onCryptoButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
 
-    [System.Windows.Forms.MessageBox]::Show(
-        '敬請期待',
-        '提示',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+    RunCrypto
 }
 
 function onHashButtonClick(
     [System.Windows.Forms.Button]$object,
     [System.EventArgs]$e) {
 
-    [System.Windows.Forms.MessageBox]::Show(
-        '敬請期待',
-        '提示',
-        [System.Windows.Forms.MessageBoxButtons]::OK,
-        [System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null
+    RunHash
 }
 
 function onAboutButtonClick(
