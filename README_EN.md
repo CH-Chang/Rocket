@@ -26,7 +26,7 @@ Rocket is a Restful API request tool developed purely based on Powershell. While
 
 ## Screenshots
 
-![alt Rocket](https://i.imgur.com/YCwvr8u.png)
+![alt Rocket](https://i.imgur.com/jndtRug.gif)
 
 ## License
 

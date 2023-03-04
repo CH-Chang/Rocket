@@ -28,7 +28,7 @@
 
 ## 運行畫面
 
-![alt Rocket](https://i.imgur.com/YCwvr8u.png)
+![alt Rocket](https://i.imgur.com/jndtRug.gif)
 
 ## 版權聲明
 
