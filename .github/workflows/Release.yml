@@ -14,14 +14,11 @@ jobs:
       run: |
         cp Windows Output/Windows -r &&
         cp Utils Output/Utils -r &&
+        cp Main.ps1 Output/ &&
         cp Run.bat Output/
-    - name: Compress Code
-      uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r Output.zip Output
     - name: Publish Artifact
       uses: actions/upload-artifact@v3
       with:
         name: Rocket
         path: |
-          Output.zip
+          Output/**/*
